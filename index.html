@@ -41,8 +41,8 @@
       <h2>🧠 Skill Check</h2>
       <div id="clypiSkillBox" class="clypi-box">
         <img id="clypiIcon" src="clypib.png" alt="CLYPI" />
-        <p id="skillMessage" class="hidden">Nice! That’s the simplest skill of CLYPI. Help him learn more...</p>
         <p class="tip">Press the <strong>space bar</strong> or click CLYPI.</p>
+        <p id="skillMessage" class="hidden">Nice! That’s the simplest skill of CLYPI. Help him learn more...</p>
       </div>
     </section>
 
@@ -93,42 +93,49 @@
 
   <!-- SCRIPT -->
   <script>
-    const icon = document.getElementById('clypiIcon');
-    const message = document.getElementById('skillMessage');
-    const sounds = [
-      document.getElementById('clypiSound1'),
-      document.getElementById('clypiSound2'),
-      document.getElementById('clypiSound3')
-    ];
-    let skillUnlocked = false;
-
-    function playRandomSound() {
-      const sound = sounds[Math.floor(Math.random() * sounds.length)];
-      sound.currentTime = 0;
-      sound.play();
-    }
-
-    function triggerSkill() {
-      if (skillUnlocked) return;
-
-      icon.classList.add('jump');
-      playRandomSound();
-      message.classList.remove('hidden');
-      skillUnlocked = true;
-
-      setTimeout(() => {
-        icon.classList.remove('jump');
-      }, 300);
-    }
-
-    window.addEventListener('keydown', function (e) {
-      if (e.code === 'Space') {
-        e.preventDefault();
-        triggerSkill();
+     const icon = document.getElementById('clypiIcon');
+     const message = document.getElementById('skillMessage');
+      const sounds = [
+        document.getElementById('clypiSound1'),
+        document.getElementById('clypiSound2'),
+        document.getElementById('clypiSound3')
+      ];
+      let messageShown = false;
+    
+      function playRandomSound() {
+        const sound = sounds[Math.floor(Math.random() * sounds.length)];
+        sound.currentTime = 0;
+        sound.play();
       }
-    });
-
-    icon.addEventListener('click', triggerSkill);
+    
+      function triggerSkill() {
+        // Animate the icon every time
+        icon.classList.remove('jump'); // reset if needed
+        void icon.offsetWidth; // force reflow to allow retrigger
+        icon.classList.add('jump');
+    
+        playRandomSound();
+    
+        // Show the message only once
+        if (!messageShown) {
+          message.classList.remove('hidden');
+          messageShown = true;
+        }
+    
+        // Remove jump class after animation
+        setTimeout(() => {
+          icon.classList.remove('jump');
+        }, 300);
+      }
+    
+      window.addEventListener('keydown', function (e) {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          triggerSkill();
+        }
+      });
+    
+      icon.addEventListener('click', triggerSkill);
   </script>
 </body>
 </html>
